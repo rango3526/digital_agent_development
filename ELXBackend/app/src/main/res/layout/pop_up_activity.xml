@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F3ECD8">
+
+    <TextView
+        android:id="@+id/textViewDeviceName"
+        android:layout_width="372dp"
+        android:layout_height="65dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="19dp"
+        android:layout_marginRight="19dp"
+        android:layout_marginBottom="625dp"
+        android:background="#FBF9F9"
+        android:padding="10dp"
+        android:text="Prompt 1: Device"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display3"
+        android:textSize="30sp"
+        tools:text="Prompt 1: Device" />
+
+    <TextView
+        android:id="@+id/textViewDeviceDesc"
+        android:layout_width="376dp"
+        android:layout_height="577dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="17dp"
+        android:layout_marginRight="17dp"
+        android:layout_marginBottom="25dp"
+        android:background="#FBF9F9"
+        android:padding="10dp"
+        android:text="This is an electronic device that works on X phenomenon."
+        android:textAppearance="@style/TextAppearance.AppCompat.Display3"
+        android:textSize="30sp"
+        tools:text="This is an electronic device that works on X phenomenon." />
+</RelativeLayout>
