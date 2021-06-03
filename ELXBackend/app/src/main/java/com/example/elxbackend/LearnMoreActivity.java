@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import java.io.File;
+import java.net.URI;
 
 public class LearnMoreActivity extends AppCompatActivity {
     Fragment imageFragment;
@@ -41,6 +44,7 @@ public class LearnMoreActivity extends AppCompatActivity {
         Button learnMoreButton = (Button) findViewById(R.id.learnMoreButton);
         TextView predictionRes = findViewById(R.id.predictionTextView);
         avatarTextView = findViewById(R.id.avatarTV);
+        imageView = findViewById(R.id.capturedImageView);
 
         // using Intent, we get all the information of the previous activities
         Intent intent = this.getIntent();
@@ -50,16 +54,25 @@ public class LearnMoreActivity extends AppCompatActivity {
             imageFilePath = intent.getStringExtra("imagePath");
             filename = intent.getStringExtra("filename");
 
-            avatarImageView.setImageResource(selectedImage);
 
-            filePath =  Environment.getExternalStorageDirectory().getAbsolutePath() + filename;
-            File imgFile = new File(filePath);
-            if(imgFile.exists()){
-                photo = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                imageView = (ImageView) findViewById(R.id.capturedImageView);
-                imageView.setImageBitmap(photo);
-            }
-            predictionRes.setText(predictedResult); // not working
+            avatarImageView.setImageResource(selectedImage);
+            // OLD IMAGE STUFF
+//            filePath =  Environment.getExternalStorageDirectory().getAbsolutePath() + filename;
+//            File imgFile = new File(filePath);
+//            if(imgFile.exists()){
+//                photo = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+//                imageView = (ImageView) findViewById(R.id.capturedImageView);
+//                imageView.setImageBitmap(photo);
+//            }
+            // NEW IMAGE STUFF
+//            byte[] byteArray = intent.getByteArrayExtra("imgBitmap");
+//            photo = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+//            imageView.setImageBitmap(photo);
+            Uri imageUri = Uri.parse(intent.getStringExtra("imgUri"));
+            imageView.setImageURI(imageUri);
+
+            predictionRes.setText("Let's learn more about the " + predictedResult + "!"); // not working
+//            Log.e("Past predictRes", "Prediction text: " + predictedResult);
         }
 
         // for backward navigation
@@ -67,6 +80,7 @@ public class LearnMoreActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LearnMoreActivity.this, PredictionActivity.class);
+                intent.putExtra("avatar", selectedImage);
                 startActivity(intent);
             }
         });
