@@ -1,5 +1,6 @@
 package com.example.elxbackend;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,13 +13,22 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
 import java.io.File;
 import java.net.URI;
+import java.util.UUID;
 
 public class LearnMoreActivity extends AppCompatActivity {
     Fragment imageFragment;
@@ -32,10 +42,19 @@ public class LearnMoreActivity extends AppCompatActivity {
     int selectedImage;
     ImageView avatarImageView;
 
+    // instance for firebase storage and StorageReference
+    FirebaseStorage storage;
+    StorageReference storageReference;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // get the Firebase  storage reference
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
         setContentView(R.layout.activity_learn_more);
 
         avatarImageView = findViewById(R.id.avatarImageView);
@@ -70,6 +89,7 @@ public class LearnMoreActivity extends AppCompatActivity {
 //            imageView.setImageBitmap(photo);
             Uri imageUri = Uri.parse(intent.getStringExtra("imgUri"));
             imageView.setImageURI(imageUri);
+            uploadImageToFirebase(imageUri);
 
             predictionRes.setText("Let's learn more about the " + predictedResult + "!"); // not working
 //            Log.e("Past predictRes", "Prediction text: " + predictedResult);
@@ -116,5 +136,79 @@ public class LearnMoreActivity extends AppCompatActivity {
         intent.putExtra("avatar", selectedImage);
         //intent.putExtra("capturedImage", 0);
         startActivity(intent);
+    }
+
+    private void uploadImageToFirebase(Uri filePath)
+    {
+        if (filePath != null) {
+
+            // Code for showing progressDialog while uploading
+            ProgressDialog progressDialog
+                    = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+
+            // Defining the child of storageReference
+            StorageReference ref
+                    = storageReference
+                    .child(
+                            "images/"
+                                    + predictedResult +"-" + UUID.randomUUID().toString());
+
+            // adding listeners on upload
+            // or failure of image
+            ref.putFile(filePath)
+                    .addOnSuccessListener(
+                            new OnSuccessListener<UploadTask.TaskSnapshot>() {
+
+                                @Override
+                                public void onSuccess(
+                                        UploadTask.TaskSnapshot taskSnapshot)
+                                {
+
+                                    // Image uploaded successfully
+                                    // Dismiss dialog
+                                    progressDialog.dismiss();
+                                    Toast
+                                            .makeText(getApplicationContext(),
+                                                    "Image Uploaded!!",
+                                                    Toast.LENGTH_LONG)
+                                            .show();
+                                }
+                            })
+
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(Exception e)
+                        {
+
+                            // Error, Image not uploaded
+                            progressDialog.dismiss();
+                            Toast
+                                    .makeText(getApplicationContext(),
+                                            "Failed " + e.getMessage(),
+                                            Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                    })
+                    .addOnProgressListener(
+                            new OnProgressListener<UploadTask.TaskSnapshot>() {
+
+                                // Progress Listener for loading
+                                // percentage on the dialog box
+                                @Override
+                                public void onProgress(
+                                        UploadTask.TaskSnapshot taskSnapshot)
+                                {
+                                    double progress
+                                            = (100.0
+                                            * taskSnapshot.getBytesTransferred()
+                                            / taskSnapshot.getTotalByteCount());
+                                    progressDialog.setMessage(
+                                            "Uploaded "
+                                                    + (int)progress + "%");
+                                }
+                            });
+        }
     }
 }
