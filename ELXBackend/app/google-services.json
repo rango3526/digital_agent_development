@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "81171387855",
+    "project_id": "elx-digital-companion",
+    "storage_bucket": "elx-digital-companion.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:81171387855:android:41f034e0e599b20b6eaeba",
+        "android_client_info": {
+          "package_name": "com.example.elxbackend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "81171387855-rv3bdj8h61p1t4kkselo2jrsj8au24dl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnpa4fChXletb2mIsXsMHDQjv7GZesG1g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "81171387855-rv3bdj8h61p1t4kkselo2jrsj8au24dl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
